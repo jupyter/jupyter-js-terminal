@@ -25,14 +25,6 @@ import {
  */
 class TerminalWidget extends Widget {
 
-  static nterms = 0;
-
-  static createTerminal(wsUrl: string, config?: ITerminalConfig) : TerminalWidget {
-    TerminalWidget.nterms += 1;
-    var term = new TerminalWidget(wsUrl, config);
-    return term;
-  }
-
   constructor(ws_url: string, config?: ITerminalConfig) {
     super();
     this.addClass('TerminalWidget');
