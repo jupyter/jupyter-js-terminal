@@ -25,6 +25,9 @@ import {
  */
 class TerminalWidget extends Widget {
 
+  /**
+   * Construct a new terminal widget.
+   */
   constructor(wsUrl: string, config?: ITerminalConfig) {
     super();
     this.addClass('TerminalWidget');
@@ -59,6 +62,9 @@ class TerminalWidget extends Widget {
     };
   }
 
+  /**
+   * Dispose of the resources held by the terminal widget.
+   */
   dispose(): void {
     this._term.destroy();
     this._ws = null;
@@ -66,10 +72,16 @@ class TerminalWidget extends Widget {
     super.dispose();
   }
 
+  /**
+   * Set up the initial size of the terminal when attached.
+   */
   protected onAfterAttach(msg: Message): void {
     this._snapTermSizing();
   }
 
+  /**
+   * On resize, use the computed row and column sizes to resize the terminal.
+   */
   protected onResize(msg: ResizeMessage): void {
     if (!this._row_height) this._row_height = 1;
     if (!this._col_width) this._col_width = 1;
@@ -78,6 +90,9 @@ class TerminalWidget extends Widget {
     this._term.resize(cols, rows);
   }
 
+  /**
+   * Use a dummy terminal to measure the row and column sizes.
+   */
   private _snapTermSizing(): void {
     var dummy_term = document.createElement('div');
     dummy_term.style.visibility = 'hidden';
