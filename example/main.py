@@ -23,8 +23,6 @@ def main(argv):
         (r"/", MainPageHandler),
         (r'/(.*)', tornado.web.StaticFileHandler,
          {'path': '.'}),
-        (r'/components/font-awesome/fonts/(.*)', tornado.web.StaticFileHandler,
-         {'path': './components/font-awesome/fonts/'}),
     ]
 
     nb_command = [sys.executable, '-m', 'notebook', '--no-browser',
