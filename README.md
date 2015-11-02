@@ -6,6 +6,7 @@ Terminal client for Jupyter.
 [API Docs](http://jupyter.github.io/jupyter-js-terminal/)
 
 
+
 Package Install
 ---------------
 
