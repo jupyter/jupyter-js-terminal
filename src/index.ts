@@ -31,6 +31,8 @@ class TerminalWidget extends Widget {
     this._ws = new WebSocket(wsUrl);
     this._config = config || { useStyle: true };
 
+    Terminal.brokenBold = true;
+
     this._term = new Terminal(this._config);
     this._term.open(this.node);
 

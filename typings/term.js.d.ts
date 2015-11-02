@@ -24,6 +24,9 @@ declare module 'term.js' {
    */
   export 
   class Terminal {
+
+    static brokenBold: boolean;
+
     constructor(config: ITerminalConfig);
 
     options: ITerminalConfig;
