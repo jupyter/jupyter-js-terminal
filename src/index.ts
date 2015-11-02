@@ -25,10 +25,10 @@ import {
  */
 class TerminalWidget extends Widget {
 
-  constructor(ws_url: string, config?: ITerminalConfig) {
+  constructor(wsUrl: string, config?: ITerminalConfig) {
     super();
     this.addClass('TerminalWidget');
-    this._ws = new WebSocket(ws_url);
+    this._ws = new WebSocket(wsUrl);
     this._config = config || { useStyle: true };
 
     this._term = new Terminal(this._config);
