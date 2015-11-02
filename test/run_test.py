@@ -9,7 +9,7 @@ import threading
 KARMA_PORT = 9876
 
 argparser = argparse.ArgumentParser(
-        description='Run Jupyter JS Sevices integration tests'
+        description='Run Jupyter JS Terminal integration tests'
     )
 argparser.add_argument('-b', '--browsers', default='Firefox',
                        help="Browsers to use for Karma test")
