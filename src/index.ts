@@ -38,6 +38,10 @@ class TerminalWidget extends Widget {
       this._ws.send(JSON.stringify(['stdin', data]));
     });
 
+    this._term.on('title', (title: string) => {
+        this.title.text = title;
+    });
+
     this._ws.onmessage = (event: MessageEvent) => {
       var json_msg = JSON.parse(event.data);
       switch (json_msg[0]) {
