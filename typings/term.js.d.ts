@@ -14,7 +14,7 @@ declare module 'term.js' {
     visualBell?: boolean;
     popOnBell?: boolean;
     scrollback?: number;
-    screenKeys?: number;
+    screenKeys?: boolean;
     useStyle?: boolean;
   }
 

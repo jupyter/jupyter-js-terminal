@@ -29,7 +29,9 @@ class TerminalWidget extends Widget {
     super();
     this.addClass('TerminalWidget');
     this._ws = new WebSocket(wsUrl);
-    this._config = config || { useStyle: true };
+    this._config = config || { };
+    this._config.screenKeys = config.screenKeys || false;
+    this._config.useStyle = config.useStyle || false;
 
     Terminal.brokenBold = true;
 
