@@ -14,6 +14,8 @@ import {
   Terminal, ITerminalConfig
 } from 'term.js';
 
+import './index.css';
+
 
 /**
  * A widget which manages a terminal session.

@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "expect.js": "^0.3.1",
+    "glob-copy": "^0.1.0",
     "istanbul": "^0.3.18",
     "karma": "^0.13.9",
     "karma-browserify": "^4.3.0",
@@ -25,7 +26,7 @@
   },
   "scripts": {
     "clean": "rimraf docs && rimraf lib && rimraf test/build",
-    "build:src": "tsc --project src",
+    "build:src": "tsc --project src && node scripts/copycss.js",
     "build:test": "tsc --project test",
     "build": "npm run build:src && npm run build:test",
     "docs": "typedoc --options scripts/tdoptions.json",
