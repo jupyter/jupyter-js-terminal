@@ -1,3 +1,6 @@
+// Type definitions for term.js 0.0.7
+// Project: https://github.com/chjj/term.js
+// Definitions by: Steven Silvester <https://github.com/blink1073>
 
 declare module 'term.js' {
 
