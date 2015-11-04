@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "dependencies": {
+    "phosphor-messaging": "^1.0.5",
     "phosphor-widget": "^0.9.13",
     "term.js": "0.0.7"
   },
