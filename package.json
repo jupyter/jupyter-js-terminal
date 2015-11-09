@@ -6,8 +6,7 @@
   "typings": "lib/index.d.ts",
   "dependencies": {
     "phosphor-messaging": "^1.0.5",
-    "phosphor-widget": "^0.9.13",
-    "term.js": "0.0.7"
+    "phosphor-widget": "^0.9.13"    
   },
   "devDependencies": {
     "expect.js": "^0.3.1",
@@ -22,6 +21,7 @@
     "karma-mocha-reporter": "^1.1.1",
     "mocha": "^2.2.5",
     "rimraf": "^2.4.2",
+    "term.js": "0.0.7",
     "typedoc": "^0.3.11",
     "typescript": "^1.6.2"
   },
