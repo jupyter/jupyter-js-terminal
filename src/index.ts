@@ -20,6 +20,7 @@ import './index.css';
 /**
  * A widget which manages a terminal session.
  */
+export
 class TerminalWidget extends Widget {
 
   /**
