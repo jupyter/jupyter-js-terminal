@@ -23,13 +23,17 @@ import './index.css';
 export
 class TerminalWidget extends Widget {
 
+  static nterms = 0;
+
   /**
    * Construct a new terminal widget.
    */
-  constructor(wsUrl: string, config?: ITerminalConfig) {
+  constructor(config?: ITerminalConfig) {
     super();
     this.addClass('TerminalWidget');
-    this._ws = new WebSocket(wsUrl);
+    TerminalWidget.nterms += 1;
+    var url = `ws://localhost:8765/terminals/websocket/${TerminalWidget.nterms}`;
+    this._ws = new WebSocket(url);
     this._config = config || { };
     this._config.screenKeys = config.screenKeys || false;
     this._config.useStyle = config.useStyle || false;
