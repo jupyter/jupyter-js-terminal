@@ -134,6 +134,9 @@ class TerminalWidget extends Widget {
  */
 function defaultBaseUrl(baseUrl?: string): string {
   if (baseUrl !== undefined) {
+    if (baseUrl[baseUrl.length - 1] !== '/') {
+      baseUrl += '/';
+    }
     return baseUrl;
   }
   if (typeof location === undefined) {
