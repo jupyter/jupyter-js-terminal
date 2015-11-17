@@ -9,7 +9,7 @@ export declare class TerminalWidget extends Widget {
     /**
      * Construct a new terminal widget.
      */
-    constructor(config?: ITerminalConfig);
+    constructor(url: string, config?: ITerminalConfig);
     /**
      * Dispose of the resources held by the terminal widget.
      */

@@ -28,15 +28,13 @@ class TerminalWidget extends Widget {
   /**
    * Construct a new terminal widget.
    */
-  constructor(config?: ITerminalConfig) {
+  constructor(url: string, config?: ITerminalConfig) {
     super();
-    this.addClass('TerminalWidget');
-    TerminalWidget.nterms += 1;
-    var url = `ws://localhost:8765/terminals/websocket/${TerminalWidget.nterms}`;
+    this.addClass('jp-TerminalWidget');
     this._ws = new WebSocket(url);
     this._config = config || { };
-    this._config.screenKeys = config.screenKeys || false;
-    this._config.useStyle = config.useStyle || false;
+    this._config.screenKeys = this._config.screenKeys || false;
+    this._config.useStyle = this._config.useStyle || false;
 
     Terminal.brokenBold = true;
 

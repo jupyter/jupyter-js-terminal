@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "noEmitOnError": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "ES5"
+  },
+  "files": [
+    "../typings/term.js.d.ts",
+    "index.ts"
+  ]
+}
