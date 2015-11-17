@@ -16,7 +16,7 @@ import {
 
 function main(): void {
 
-  var term = new TerminalWidget('ws://localhost:8888/');
+  var term = new TerminalWidget('ws://localhost:8888');
 
   Widget.attach(term, document.body);
 
