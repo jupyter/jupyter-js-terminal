@@ -23,14 +23,25 @@ import './index.css';
 export
 class TerminalWidget extends Widget {
 
+  /**
+   * The number of terminals started.  Used to ensure unique sessions.
+   */
   static nterms = 0;
 
   /**
    * Construct a new terminal widget.
+   *
+   * @param baseUrl - The base websocket url for the session
+   *   (e.g. 'ws://localhost:8888/').
+   *
+   * @param config - The terminal configuration options.
    */
-  constructor(url: string, config?: ITerminalConfig) {
+  constructor(baseUrl?: string, config?: ITerminalConfig) {
     super();
     this.addClass('jp-TerminalWidget');
+    baseUrl = defaultBaseUrl(baseUrl);
+    TerminalWidget.nterms += 1;
+    let url = baseUrl + 'terminals/websocket/' + TerminalWidget.nterms;
     this._ws = new WebSocket(url);
     this._config = config || { };
     this._config.screenKeys = this._config.screenKeys || false;
@@ -114,4 +125,20 @@ class TerminalWidget extends Widget {
   private _row_height: number;
   private _col_width: number;
   private _config: ITerminalConfig;
+}
+
+
+
+/**
+ * Handle default logic for baseUrl.
+ */
+function defaultBaseUrl(baseUrl?: string): string {
+  if (baseUrl !== undefined) {
+    return baseUrl;
+  }
+  if (typeof location === undefined) {
+    return 'ws://localhost:8888/';
+  } else {
+    return 'ws' + location.origin.slice(4) + '/';
+  }
 }

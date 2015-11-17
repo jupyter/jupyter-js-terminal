@@ -5,11 +5,19 @@ import { ITerminalConfig } from 'term.js';
  * A widget which manages a terminal session.
  */
 export declare class TerminalWidget extends Widget {
+    /**
+     * The number of terminals started.  Used to ensure unique sessions.
+     */
     static nterms: number;
     /**
      * Construct a new terminal widget.
+     *
+     * @param baseUrl - The base websocket url for the session
+     *   (e.g. 'ws://localhost:8888/').
+     *
+     * @param config - The terminal configuration options.
      */
-    constructor(url: string, config?: ITerminalConfig);
+    constructor(baseUrl?: string, config?: ITerminalConfig);
     /**
      * Dispose of the resources held by the terminal widget.
      */
