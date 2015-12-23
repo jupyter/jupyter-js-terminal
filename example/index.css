@@ -7,4 +7,15 @@
   min-height: 50px;
   background: black;
   padding: 0.4em;
+  border: black solid 5px;
+  font-family: "DejaVu Sans Mono", "Liberation Mono", monospace;
+  font-size: 11px;
+  color: white;
+  background: black;
+}
+
+
+.terminal-cursor {
+  color: black;
+  background: white;
 }

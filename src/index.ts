@@ -14,8 +14,6 @@ import {
   Terminal, ITerminalConfig
 } from 'term.js';
 
-import './index.css';
-
 
 /**
  * A widget which manages a terminal session.
@@ -36,7 +34,7 @@ class TerminalWidget extends Widget {
    *
    * @param config - The terminal configuration options.
    */
-  constructor(baseUrl?: string, config?: ITerminalConfig) {
+  constructor(baseUrl: string, config?: ITerminalConfig) {
     super();
     this.addClass('jp-TerminalWidget');
     baseUrl = defaultBaseUrl(baseUrl);

@@ -3,11 +3,7 @@
 |
 | Distributed under the terms of the Modified BSD License.
 |----------------------------------------------------------------------------*/
-'use-strict';
-
-import {
-  Widget
-} from 'phosphor-widget';
+'use strict';
 
 import {
   TerminalWidget
@@ -18,7 +14,7 @@ function main(): void {
 
   var term = new TerminalWidget('ws://localhost:8888');
 
-  Widget.attach(term, document.body);
+  term.attach(document.body);
 
   window.onresize = () => term.update();
 }

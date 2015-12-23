@@ -17,7 +17,7 @@ export declare class TerminalWidget extends Widget {
      *
      * @param config - The terminal configuration options.
      */
-    constructor(baseUrl?: string, config?: ITerminalConfig);
+    constructor(baseUrl: string, config?: ITerminalConfig);
     /**
      * Dispose of the resources held by the terminal widget.
      */
