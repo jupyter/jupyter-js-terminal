@@ -5,8 +5,8 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "dependencies": {
-    "phosphor-messaging": "^1.0.5",
-    "phosphor-widget": "^1.0.0-beta.1",
+    "phosphor-messaging": "^1.0.6",
+    "phosphor-widget": "^1.0.0-beta.8",
     "term.js": "0.0.7"
   },
   "devDependencies": {
@@ -33,7 +33,7 @@
     "build:example": "tsc --project example && browserify -t browserify-css example/index.js -o example/bundle.js",
     "build:src": "tsc --project src && node scripts/copycss.js",
     "build:test": "tsc --project test",
-    "build": "npm run build:src && npm run build:test",
+    "build": "npm run build:src && npm run build:test && npm run build:example",
     "docs": "typedoc --options scripts/tdoptions.json",
     "postinstall": "npm dedupe",
     "prepublish": "npm run build",

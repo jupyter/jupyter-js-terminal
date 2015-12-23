@@ -6,10 +6,6 @@
 'use-strict';
 
 import {
-  Widget
-} from 'phosphor-widget';
-
-import {
   TerminalWidget
 } from '../lib/index';
 
@@ -18,7 +14,7 @@ function main(): void {
 
   var term = new TerminalWidget('ws://localhost:8888');
 
-  Widget.attach(term, document.body);
+  term.attach(document.body);
 
   window.onresize = () => term.update();
 }
