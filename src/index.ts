@@ -1,6 +1,6 @@
 // Copyright (c) Jupyter Development Team.
 // Distributed under the terms of the Modified BSD License.
-'use-strict';
+'use strict';
 
 import {
   Message
@@ -13,6 +13,39 @@ import {
 import {
   Terminal, ITerminalConfig
 } from 'term.js';
+
+
+/**
+ * The class name added to a terminal widget.
+ */
+const TERMINAL_CLASS = 'jp-TerminalWidget';
+
+
+/**
+ * Options for the terminal widget.
+ */
+export 
+interface ITerminalOptions {
+  /**
+   * The base websocket url.
+   */
+  baseUrl?: string;
+
+  /**
+   * The background color of the terminal.
+   */
+  background?: string;
+
+  /**
+   * The text color of the terminal.
+   */
+  color?: string;
+
+  /**
+   * The term.js configuration options.
+   */
+  config?: ITerminalConfig;
+}
 
 
 /**
@@ -34,21 +67,22 @@ class TerminalWidget extends Widget {
    *
    * @param config - The terminal configuration options.
    */
-  constructor(baseUrl: string, config?: ITerminalConfig) {
+  constructor(options?: ITerminalOptions) {
     super();
-    this.addClass('jp-TerminalWidget');
-    baseUrl = defaultBaseUrl(baseUrl);
+    options = options || {};
+    this.addClass(TERMINAL_CLASS);
+    let baseUrl = defaultBaseUrl(options.baseUrl);
     TerminalWidget.nterms += 1;
     let url = baseUrl + 'terminals/websocket/' + TerminalWidget.nterms;
     this._ws = new WebSocket(url);
-    this._config = config || { };
-    this._config.screenKeys = this._config.screenKeys || false;
-    this._config.useStyle = this._config.useStyle || false;
-
+    
     Terminal.brokenBold = true;
 
-    this._term = new Terminal(this._config);
-    this._term.open(this.node);
+    this._term = new Terminal(options.config);
+
+    if (options.background) this.background = options.background;
+    if (options.color) this.color = options.color;
+    this.update();
 
     this._term.on('data', (data: string) => {
       this._ws.send(JSON.stringify(['stdin', data]));
@@ -69,6 +103,36 @@ class TerminalWidget extends Widget {
         break;
       }
     };
+  }
+
+  /**
+   * Get the background color of the widget.
+   */
+  get background(): string {
+    return this._term.colors[256];
+  }
+
+  /**
+   * Set the background color of the widget.
+   */
+  set background(value: string) {
+    this._term.colors[256] = value;
+    this.update();
+  }
+
+  /**
+   * Get the text color of the widget.
+   */
+  get color(): string {
+    return this._term.colors[257];
+  }
+
+  /**
+   * Set the text color of the widget.
+   */
+  set color(value: string) {
+    this._term.colors[257] = value;
+    this.update();
   }
 
   /**
@@ -100,6 +164,24 @@ class TerminalWidget extends Widget {
   }
 
   /**
+   * A message handler invoked on an `'update-request'` message.
+   */
+  protected onUpdateRequest(msg: Message): void {
+    if (this.node.firstChild) this.node.removeChild(this.node.firstChild);
+    this._term.open(this.node);
+    if (this._sheet) {
+      document.body.removeChild(this._sheet);
+    }
+    this._sheet = document.createElement('style');
+    document.body.appendChild(this._sheet);
+    this._sheet.innerHTML = (".terminal-cursor {background: " + this.color + 
+                             "; color:" + this.background + ";}");
+    setTimeout(() => {
+      this._term.refreshBlink();
+    }, 100);
+  }
+
+  /**
    * Use a dummy terminal to measure the row and column sizes.
    */
   private _snapTermSizing(): void {
@@ -122,7 +204,7 @@ class TerminalWidget extends Widget {
   private _ws: WebSocket;
   private _row_height: number;
   private _col_width: number;
-  private _config: ITerminalConfig;
+  private _sheet: HTMLElement = null;
 }
 
 
