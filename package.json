@@ -39,7 +39,6 @@
     "prepublish": "npm run build",
     "test": "mocha test/build/index.js",
     "test:debug": "pkill node; node-debug _mocha test/build/index.js",
-    "test:integration": "cd test && python run_test.py",
     "test:coverage": "istanbul cover _mocha -- test/build/index.js"
   },
   "repository": {
