@@ -28,8 +28,7 @@
     "typescript": "^1.6.2"
   },
   "scripts": {
-    "clean": "rimraf docs && rimraf lib && rimraf test/build",
-    "clean:example": "rimraf example/*.js",
+    "clean": "rimraf docs && rimraf lib && rimraf test/build && rimraf example/*.js",
     "build:example": "tsc --project example && browserify -t browserify-css example/index.js -o example/bundle.js",
     "build:src": "tsc --project src && node scripts/copycss.js",
     "build:test": "tsc --project test",
