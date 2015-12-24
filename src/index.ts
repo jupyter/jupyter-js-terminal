@@ -128,6 +128,7 @@ class TerminalWidget extends Widget {
     };
 
     this._sheet = document.createElement('style');
+    this.node.appendChild(this._sheet);
   }
 
   /**
@@ -207,7 +208,6 @@ class TerminalWidget extends Widget {
    */
   dispose(): void {
     this._term.destroy();
-    document.body.removeChild(this._sheet);
     this._sheet = null;
     this._ws = null;
     this._term = null;
@@ -219,7 +219,6 @@ class TerminalWidget extends Widget {
    */
   protected onAfterAttach(msg: Message): void {
     this._snapTermSizing();
-    document.body.appendChild(this._sheet);
   }
 
   /**
