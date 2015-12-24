@@ -5,11 +5,9 @@
 .jp-TerminalWidget {
   min-width: 50px;
   min-height: 50px;
-  padding: 0;
-  font-family: "DejaVu Sans Mono", "Liberation Mono", monospace;
-  font-size: 11px;
 }
 
-.terminal {
+.jp-TerminalWidget-body {
   padding: 0.5em;
+  font-size: 11px;
 }

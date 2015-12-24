@@ -58,6 +58,12 @@ declare module 'term.js' {
 
     cols: number;
 
+    visualBell: boolean;
+
+    popOnBell: boolean;
+
+    scrollback: number;
+
     open(el: HTMLElement): void;
 
     write(msg: string): void;

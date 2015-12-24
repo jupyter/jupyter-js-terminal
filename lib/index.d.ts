@@ -1,6 +1,5 @@
 import { Message } from 'phosphor-messaging';
 import { ResizeMessage, Widget } from 'phosphor-widget';
-import { ITerminalConfig } from 'term.js';
 /**
  * Options for the terminal widget.
  */
@@ -18,9 +17,21 @@ export interface ITerminalOptions {
      */
     color?: string;
     /**
-     * The term.js configuration options.
+     * Whether to show the cursor.
      */
-    config?: ITerminalConfig;
+    cursorBlink?: boolean;
+    /**
+     * Whether to show a bell in the terminal.
+     */
+    visualBell?: boolean;
+    /**
+     * Whether to focus on a bell event.
+     */
+    popOnBell?: boolean;
+    /**
+     * Max number of scrollable lines in the terminal.
+     */
+    scrollback?: number;
 }
 /**
  * A widget which manages a terminal session.
@@ -50,9 +61,30 @@ export declare class TerminalWidget extends Widget {
      * Get the text color of the widget.
      */
     /**
-     * Set the text color of the widget.
+     * Set the text color of the terminal.
      */
     color: string;
+    /**
+     * Get whether the bell is shown.
+     */
+    /**
+     * Set whether the bell is shown.
+     */
+    visualBell: boolean;
+    /**
+     * Get whether to focus on a bell event.
+     */
+    /**
+     * Set whether to focus on a bell event.
+     */
+    popOnBell: boolean;
+    /**
+     * Get the max number of scrollable lines in the terminal.
+     */
+    /**
+     * Set the max number of scrollable lines in the terminal.
+     */
+    scrollback: boolean;
     /**
      * Dispose of the resources held by the terminal widget.
      */

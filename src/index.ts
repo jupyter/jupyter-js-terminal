@@ -14,11 +14,18 @@ import {
   Terminal, ITerminalConfig
 } from 'term.js';
 
+import './index.css';
+
 
 /**
  * The class name added to a terminal widget.
  */
 const TERMINAL_CLASS = 'jp-TerminalWidget';
+
+/**
+ * The class name added to a terminal body.
+ */
+const TERMINAL_BODY_CLASS = 'jp-TerminalWidget-body';
 
 
 /**
@@ -42,9 +49,24 @@ interface ITerminalOptions {
   color?: string;
 
   /**
-   * The term.js configuration options.
+   * Whether to show the cursor.
    */
-  config?: ITerminalConfig;
+  cursorBlink?: boolean;
+
+  /**
+   * Whether to show a bell in the terminal.
+   */
+  visualBell?: boolean;
+
+  /**
+   * Whether to focus on a bell event.
+   */
+  popOnBell?: boolean;
+
+  /**
+   * Max number of scrollable lines in the terminal.
+   */
+  scrollback?: number;
 }
 
 
@@ -78,11 +100,12 @@ class TerminalWidget extends Widget {
     
     Terminal.brokenBold = true;
 
-    this._term = new Terminal(options.config);
+    this._term = new Terminal(getConfig(options));
+    this._term.open(this.node);
+    this._term.element.classList.add(TERMINAL_BODY_CLASS)
 
     if (options.background) this.background = options.background;
     if (options.color) this.color = options.color;
-    this.update();
 
     this._term.on('data', (data: string) => {
       this._ws.send(JSON.stringify(['stdin', data]));
@@ -128,7 +151,7 @@ class TerminalWidget extends Widget {
   }
 
   /**
-   * Set the text color of the widget.
+   * Set the text color of the terminal.
    */
   set color(value: string) {
     this._term.colors[257] = value;
@@ -136,10 +159,56 @@ class TerminalWidget extends Widget {
   }
 
   /**
+   * Get whether the bell is shown.
+   */
+  get visualBell(): boolean {
+    return this._term.visualBell;
+  }
+
+  /**
+   * Set whether the bell is shown.
+   */
+  set visualBell(value: boolean) {
+    this._term.visualBell = value;
+  }
+
+  /**
+   * Get whether to focus on a bell event.
+   */
+  get popOnBell(): boolean {
+    return this._term.popOnBell;
+  }
+
+  /**
+   * Set whether to focus on a bell event.
+   */
+  set popOnBell(value: boolean) {
+    this._term.popOnBell = value;
+  }
+
+  /**
+   * Get the max number of scrollable lines in the terminal.
+   */
+  get scrollback(): boolean {
+    return this._term.scrollback;
+  }
+
+  /**
+   * Set the max number of scrollable lines in the terminal.
+   */
+  set scrollback(value: boolean) {
+    this._term.scrollback = value;
+  }
+
+  /**
    * Dispose of the resources held by the terminal widget.
    */
   dispose(): void {
     this._term.destroy();
+    if (this._sheet) {
+      document.body.removeChild(this._sheet);
+    }
+    this._sheet = null;
     this._ws = null;
     this._term = null;
     super.dispose();
@@ -167,8 +236,9 @@ class TerminalWidget extends Widget {
    * A message handler invoked on an `'update-request'` message.
    */
   protected onUpdateRequest(msg: Message): void {
-    if (this.node.firstChild) this.node.removeChild(this.node.firstChild);
-    this._term.open(this.node);
+    // Set the fg and bg colors of the terminal and cursor.
+    this._term.element.style.backgroundColor = this.background;
+    this._term.element.style.color = this.color;
     if (this._sheet) {
       document.body.removeChild(this._sheet);
     }
@@ -176,9 +246,6 @@ class TerminalWidget extends Widget {
     document.body.appendChild(this._sheet);
     this._sheet.innerHTML = (".terminal-cursor {background: " + this.color + 
                              "; color:" + this.background + ";}");
-    setTimeout(() => {
-      this._term.refreshBlink();
-    }, 100);
   }
 
   /**
@@ -207,6 +274,26 @@ class TerminalWidget extends Widget {
   private _sheet: HTMLElement = null;
 }
 
+
+/**
+ * Get term.js options from ITerminalOptions.
+ */
+function getConfig(options: ITerminalOptions): ITerminalConfig {
+  let config: ITerminalConfig = {};
+  if (options.cursorBlink !== void 0) {
+    config.cursorBlink = options.cursorBlink;
+  }
+  if (options.visualBell !== void 0) {
+    config.visualBell = options.visualBell;
+  }
+  if (options.popOnBell !== void 0) {
+    config.popOnBell = options.popOnBell;
+  }
+  if (options.scrollback !== void 0) {
+    config.scrollback = options.scrollback;
+  }
+  return config;
+}
 
 
 /**
