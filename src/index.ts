@@ -64,7 +64,7 @@ interface ITerminalOptions {
   popOnBell?: boolean;
 
   /**
-   * Max number of scrollable lines in the terminal.
+   * The size of the scrollback buffer in the terminal.
    */
   scrollback?: number;
 }
@@ -187,14 +187,14 @@ class TerminalWidget extends Widget {
   }
 
   /**
-   * Get the max number of scrollable lines in the terminal.
+   * Get the size of the scrollback buffer in the terminal.
    */
   get scrollback(): number {
     return this._term.scrollback;
   }
 
   /**
-   * Set the max number of scrollable lines in the terminal.
+   * Set the size of the scrollback buffer in the terminal.
    */
   set scrollback(value: number) {
     this._term.scrollback = value;
