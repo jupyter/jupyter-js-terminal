@@ -28,18 +28,16 @@
     "typescript": "^1.6.2"
   },
   "scripts": {
-    "clean": "rimraf docs && rimraf lib && rimraf test/build",
-    "clean:example": "rimraf example/*.js",
+    "clean": "rimraf docs && rimraf lib && rimraf test/build && rimraf example/*.js",
     "build:example": "tsc --project example && browserify -t browserify-css example/index.js -o example/bundle.js",
     "build:src": "tsc --project src && node scripts/copycss.js",
     "build:test": "tsc --project test",
-    "build": "npm run build:src && npm run build:test",
+    "build": "npm run build:src && npm run build:test && npm run build:example",
     "docs": "typedoc --options scripts/tdoptions.json",
     "postinstall": "npm dedupe",
     "prepublish": "npm run build",
     "test": "mocha test/build/index.js",
     "test:debug": "pkill node; node-debug _mocha test/build/index.js",
-    "test:integration": "cd test && python run_test.py",
     "test:coverage": "istanbul cover _mocha -- test/build/index.js"
   },
   "repository": {
