@@ -90,7 +90,7 @@ class TerminalWidget extends Widget {
     super();
     options = options || {};
     this.addClass(TERMINAL_CLASS);
-    let baseUrl = defaultBaseUrl(options.baseUrl);
+    let baseUrl = handleBaseUrl(options.baseUrl);
     TerminalWidget.nterms += 1;
     let url = baseUrl + 'terminals/websocket/' + TerminalWidget.nterms;
     this._ws = new WebSocket(url);
@@ -289,9 +289,9 @@ function getConfig(options: ITerminalOptions): ITerminalConfig {
 
 
 /**
- * Handle default logic for baseUrl.
+ * Handle logic for baseUrl.
  */
-function defaultBaseUrl(baseUrl?: string): string {
+function handleBaseUrl(baseUrl?: string): string {
   if (baseUrl !== undefined) {
     if (baseUrl[baseUrl.length - 1] !== '/') {
       baseUrl += '/';
