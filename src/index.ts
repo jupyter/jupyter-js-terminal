@@ -84,10 +84,7 @@ class TerminalWidget extends Widget {
   /**
    * Construct a new terminal widget.
    *
-   * @param baseUrl - The base websocket url for the session
-   *   (e.g. 'ws://localhost:8888/').
-   *
-   * @param config - The terminal configuration options.
+   * @param options - The terminal configuration options.
    */
   constructor(options?: ITerminalOptions) {
     super();
