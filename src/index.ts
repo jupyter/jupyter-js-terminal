@@ -1,6 +1,6 @@
 // Copyright (c) Jupyter Development Team.
 // Distributed under the terms of the Modified BSD License.
-'use-strict';
+'use strict';
 
 import {
   Message
@@ -18,6 +18,59 @@ import './index.css';
 
 
 /**
+ * The class name added to a terminal widget.
+ */
+const TERMINAL_CLASS = 'jp-TerminalWidget';
+
+/**
+ * The class name added to a terminal body.
+ */
+const TERMINAL_BODY_CLASS = 'jp-TerminalWidget-body';
+
+
+/**
+ * Options for the terminal widget.
+ */
+export 
+interface ITerminalOptions {
+  /**
+   * The base websocket url.
+   */
+  baseUrl?: string;
+
+  /**
+   * The background color of the terminal.
+   */
+  background?: string;
+
+  /**
+   * The text color of the terminal.
+   */
+  color?: string;
+
+  /**
+   * Whether to blink the cursor.  Can only be set at startup.
+   */
+  cursorBlink?: boolean;
+
+  /**
+   * Whether to show a bell in the terminal.
+   */
+  visualBell?: boolean;
+
+  /**
+   * Whether to focus on a bell event.
+   */
+  popOnBell?: boolean;
+
+  /**
+   * Max number of scrollable lines in the terminal.
+   */
+  scrollback?: number;
+}
+
+
+/**
  * A widget which manages a terminal session.
  */
 export
@@ -31,26 +84,25 @@ class TerminalWidget extends Widget {
   /**
    * Construct a new terminal widget.
    *
-   * @param baseUrl - The base websocket url for the session
-   *   (e.g. 'ws://localhost:8888/').
-   *
-   * @param config - The terminal configuration options.
+   * @param options - The terminal configuration options.
    */
-  constructor(baseUrl?: string, config?: ITerminalConfig) {
+  constructor(options?: ITerminalOptions) {
     super();
-    this.addClass('jp-TerminalWidget');
-    baseUrl = defaultBaseUrl(baseUrl);
+    options = options || {};
+    this.addClass(TERMINAL_CLASS);
+    let baseUrl = handleBaseUrl(options.baseUrl);
     TerminalWidget.nterms += 1;
     let url = baseUrl + 'terminals/websocket/' + TerminalWidget.nterms;
     this._ws = new WebSocket(url);
-    this._config = config || { };
-    this._config.screenKeys = this._config.screenKeys || false;
-    this._config.useStyle = this._config.useStyle || false;
-
+    
     Terminal.brokenBold = true;
 
-    this._term = new Terminal(this._config);
+    this._term = new Terminal(getConfig(options));
     this._term.open(this.node);
+    this._term.element.classList.add(TERMINAL_BODY_CLASS)
+
+    if (options.background) this.background = options.background;
+    if (options.color) this.color = options.color;
 
     this._term.on('data', (data: string) => {
       this._ws.send(JSON.stringify(['stdin', data]));
@@ -71,6 +123,81 @@ class TerminalWidget extends Widget {
         break;
       }
     };
+
+    this._sheet = document.createElement('style');
+    this.node.appendChild(this._sheet);
+  }
+
+  /**
+   * Get the background color of the widget.
+   */
+  get background(): string {
+    return this._term.colors[256];
+  }
+
+  /**
+   * Set the background color of the widget.
+   */
+  set background(value: string) {
+    this._term.colors[256] = value;
+    this.update();
+  }
+
+  /**
+   * Get the text color of the widget.
+   */
+  get color(): string {
+    return this._term.colors[257];
+  }
+
+  /**
+   * Set the text color of the terminal.
+   */
+  set color(value: string) {
+    this._term.colors[257] = value;
+    this.update();
+  }
+
+  /**
+   * Get whether the bell is shown.
+   */
+  get visualBell(): boolean {
+    return this._term.visualBell;
+  }
+
+  /**
+   * Set whether the bell is shown.
+   */
+  set visualBell(value: boolean) {
+    this._term.visualBell = value;
+  }
+
+  /**
+   * Get whether to focus on a bell event.
+   */
+  get popOnBell(): boolean {
+    return this._term.popOnBell;
+  }
+
+  /**
+   * Set whether to focus on a bell event.
+   */
+  set popOnBell(value: boolean) {
+    this._term.popOnBell = value;
+  }
+
+  /**
+   * Get the max number of scrollable lines in the terminal.
+   */
+  get scrollback(): number {
+    return this._term.scrollback;
+  }
+
+  /**
+   * Set the max number of scrollable lines in the terminal.
+   */
+  set scrollback(value: number) {
+    this._term.scrollback = value;
   }
 
   /**
@@ -78,6 +205,7 @@ class TerminalWidget extends Widget {
    */
   dispose(): void {
     this._term.destroy();
+    this._sheet = null;
     this._ws = null;
     this._term = null;
     super.dispose();
@@ -99,6 +227,17 @@ class TerminalWidget extends Widget {
     var rows = Math.max(2, Math.round(msg.height / this._row_height) - 1);
     var cols = Math.max(3, Math.round(msg.width / this._col_width) - 1);
     this._term.resize(cols, rows);
+  }
+
+  /**
+   * A message handler invoked on an `'update-request'` message.
+   */
+  protected onUpdateRequest(msg: Message): void {
+    // Set the fg and bg colors of the terminal and cursor.
+    this._term.element.style.backgroundColor = this.background;
+    this._term.element.style.color = this.color;
+    this._sheet.innerHTML = (".terminal-cursor {background:" + this.color + 
+                             ";color:" + this.background + ";}");
   }
 
   /**
@@ -124,15 +263,35 @@ class TerminalWidget extends Widget {
   private _ws: WebSocket;
   private _row_height: number;
   private _col_width: number;
-  private _config: ITerminalConfig;
+  private _sheet: HTMLElement = null;
 }
 
 
+/**
+ * Get term.js options from ITerminalOptions.
+ */
+function getConfig(options: ITerminalOptions): ITerminalConfig {
+  let config: ITerminalConfig = {};
+  if (options.cursorBlink !== void 0) {
+    config.cursorBlink = options.cursorBlink;
+  }
+  if (options.visualBell !== void 0) {
+    config.visualBell = options.visualBell;
+  }
+  if (options.popOnBell !== void 0) {
+    config.popOnBell = options.popOnBell;
+  }
+  if (options.scrollback !== void 0) {
+    config.scrollback = options.scrollback;
+  }
+  return config;
+}
+
 
 /**
- * Handle default logic for baseUrl.
+ * Handle logic for baseUrl.
  */
-function defaultBaseUrl(baseUrl?: string): string {
+function handleBaseUrl(baseUrl?: string): string {
   if (baseUrl !== undefined) {
     if (baseUrl[baseUrl.length - 1] !== '/') {
       baseUrl += '/';
