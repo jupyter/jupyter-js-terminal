@@ -64,7 +64,7 @@ interface ITerminalOptions {
   popOnBell?: boolean;
 
   /**
-   * Max number of scrollable lines in the terminal.
+   * The size of the scrollback buffer in the terminal.
    */
   scrollback?: number;
 }
