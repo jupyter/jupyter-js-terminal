@@ -49,7 +49,7 @@ interface ITerminalOptions {
   color?: string;
 
   /**
-   * Whether to show the cursor.
+   * Whether to show the cursor.  Can only be set at startup.
    */
   cursorBlink?: boolean;
 
