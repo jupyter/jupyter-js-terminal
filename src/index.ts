@@ -126,6 +126,8 @@ class TerminalWidget extends Widget {
         break;
       }
     };
+
+    this._sheet = document.createElement('style');
   }
 
   /**
@@ -205,9 +207,7 @@ class TerminalWidget extends Widget {
    */
   dispose(): void {
     this._term.destroy();
-    if (this._sheet) {
-      document.body.removeChild(this._sheet);
-    }
+    document.body.removeChild(this._sheet);
     this._sheet = null;
     this._ws = null;
     this._term = null;
@@ -219,6 +219,7 @@ class TerminalWidget extends Widget {
    */
   protected onAfterAttach(msg: Message): void {
     this._snapTermSizing();
+    document.body.appendChild(this._sheet);
   }
 
   /**
@@ -239,13 +240,8 @@ class TerminalWidget extends Widget {
     // Set the fg and bg colors of the terminal and cursor.
     this._term.element.style.backgroundColor = this.background;
     this._term.element.style.color = this.color;
-    if (this._sheet) {
-      document.body.removeChild(this._sheet);
-    }
-    this._sheet = document.createElement('style');
-    document.body.appendChild(this._sheet);
-    this._sheet.innerHTML = (".terminal-cursor {background: " + this.color + 
-                             "; color:" + this.background + ";}");
+    this._sheet.innerHTML = (".terminal-cursor {background:" + this.color + 
+                             ";color:" + this.background + ";}");
   }
 
   /**
