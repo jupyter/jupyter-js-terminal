@@ -189,14 +189,14 @@ class TerminalWidget extends Widget {
   /**
    * Get the max number of scrollable lines in the terminal.
    */
-  get scrollback(): boolean {
+  get scrollback(): number {
     return this._term.scrollback;
   }
 
   /**
    * Set the max number of scrollable lines in the terminal.
    */
-  set scrollback(value: boolean) {
+  set scrollback(value: number) {
     this._term.scrollback = value;
   }
 
