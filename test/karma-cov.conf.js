@@ -25,6 +25,9 @@ module.exports = function (config) {
             loader: 'istanbul-instrumenter'
           }
         ]
+      },
+      node: {
+        fs: "empty"
       }
     },
     coverageReporter: {

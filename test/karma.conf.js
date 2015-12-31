@@ -14,6 +14,9 @@ module.exports = function (config) {
           { test: /\.ts$/, loader: 'ts-loader' },
           { test: /\.css$/, loader: 'style-loader!css-loader' },
         ]
+      },
+      node: {
+        fs: "empty"
       }
     },
     port: 9876,
