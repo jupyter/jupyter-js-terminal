@@ -17,7 +17,7 @@ export interface ITerminalOptions {
      */
     color?: string;
     /**
-     * Whether to show the cursor.
+     * Whether to blink the cursor.  Can only be set at startup.
      */
     cursorBlink?: boolean;
     /**
@@ -29,7 +29,7 @@ export interface ITerminalOptions {
      */
     popOnBell?: boolean;
     /**
-     * Max number of scrollable lines in the terminal.
+     * The size of the scrollback buffer in the terminal.
      */
     scrollback?: number;
 }
@@ -44,10 +44,7 @@ export declare class TerminalWidget extends Widget {
     /**
      * Construct a new terminal widget.
      *
-     * @param baseUrl - The base websocket url for the session
-     *   (e.g. 'ws://localhost:8888/').
-     *
-     * @param config - The terminal configuration options.
+     * @param options - The terminal configuration options.
      */
     constructor(options?: ITerminalOptions);
     /**
@@ -79,12 +76,12 @@ export declare class TerminalWidget extends Widget {
      */
     popOnBell: boolean;
     /**
-     * Get the max number of scrollable lines in the terminal.
+     * Get the size of the scrollback buffer in the terminal.
      */
     /**
-     * Set the max number of scrollable lines in the terminal.
+     * Set the size of the scrollback buffer in the terminal.
      */
-    scrollback: boolean;
+    scrollback: number;
     /**
      * Dispose of the resources held by the terminal widget.
      */

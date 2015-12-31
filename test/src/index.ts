@@ -4,13 +4,16 @@
 
 import expect = require('expect.js');
 
+import {
+  TerminalWidget
+} from '../../lib';
 
 describe('jupyter.terminal', () => {
 
   describe('TerminalWidget', () => {
 
     it('should always pass', () => {
-
+        let widget = new TerminalWidget();
     });
 
   });
