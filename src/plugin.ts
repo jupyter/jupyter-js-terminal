@@ -3,6 +3,10 @@
 'use strict';
 
 import {
+  getConfigOption
+} from 'jupyter-js-utils';
+
+import {
   IAppShell
 } from 'phosphide';
 
@@ -34,7 +38,8 @@ class TerminalHandler {
   }
 
   run(): void {
-    let term = new TerminalWidget({ baseUrl: 'ws://localhost:8888',
+    let baseUrl = getConfigOption('wsUrl');
+    let term = new TerminalWidget({ baseUrl: baseUrl,
                                   background: 'black',
                                   color: 'white'});
     term.title.closable = true;
