@@ -10,6 +10,7 @@
   },
   "files": [
     "../typings/term.js.d.ts",
+    "../typings/es6-promise.d.ts",
     "index.ts",
     "plugin.ts"
   ]

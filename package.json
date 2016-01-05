@@ -5,8 +5,10 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "dependencies": {
+    "phosphide": "0.0.6",
+    "phosphor-di": "^0.9.0",
     "phosphor-messaging": "^1.0.6",
-    "phosphor-widget": "^1.0.0-beta.8",
+    "phosphor-widget": "^1.0.0-rc.0",
     "term.js": "0.0.7"
   },
   "devDependencies": {
