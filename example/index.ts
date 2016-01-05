@@ -6,13 +6,17 @@
 'use strict';
 
 import {
+  getConfigOption
+} from 'jupyter-js-utils';
+
+import {
   TerminalWidget
 } from '../lib/index';
 
 
 function main(): void {
-
-  var term = new TerminalWidget({ baseUrl: 'ws://localhost:8888', 
+  let baseUrl = getConfigOption('wsUrl');
+  let term = new TerminalWidget({ baseUrl: baseUrl,
                                   background: 'black',
                                   color: 'white'});
 

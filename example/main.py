@@ -2,6 +2,7 @@
 Copyright (c) Jupyter Development Team.
 Distributed under the terms of the Modified BSD License.
 """
+import re
 import subprocess
 import sys
 import threading
@@ -12,19 +13,17 @@ PORT = 8765
 
 class MainPageHandler(tornado.web.RequestHandler):
 
+    def initialize(self, ws_url):
+        self.ws_url = ws_url
+
     def get(self):
-        return self.render("index.html", static=self.static_url)
+        return self.render("index.html", static=self.static_url,
+                           ws_url=self.ws_url)
 
 
 def main(argv):
 
-    url = "http://localhost:8765"
-
-    handlers = [
-        (r"/", MainPageHandler),
-        (r'/(.*)', tornado.web.StaticFileHandler,
-         {'path': '.'}),
-    ]
+    url = "http://localhost:%s" % PORT
 
     nb_command = [sys.executable, '-m', 'notebook', '--no-browser', '--debug',
                   '--NotebookApp.allow_origin="%s"' % url]
@@ -37,11 +36,10 @@ def main(argv):
         if not line:
             continue
         print(line)
-        if 'The IPython Notebook is running at: http://localhost:8888/':
+        if 'Jupyter Notebook is running at:' in line:
+            host = re.search('http(.*?)$', line).groups()[0]
+            ws_url = 'ws' + host
             break
-        if 'Control-C' in line:
-            raise ValueError('The port 8888 was already taken, kill running '
-                             'notebook servers')
 
     while 1:
         line = nb_server.stdout.readline().decode('utf-8').strip()
@@ -59,6 +57,12 @@ def main(argv):
             print(line)
     thread = threading.Thread(target=print_thread, daemon=True)
     thread.start()
+
+    handlers = [
+        (r"/", MainPageHandler, {'ws_url': ws_url}),
+        (r'/(.*)', tornado.web.StaticFileHandler,
+         {'path': '.'}),
+    ]
 
     app = tornado.web.Application(handlers, static_path='build',
                                   template_path='.')
