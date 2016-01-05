@@ -31,7 +31,7 @@ const TERMINAL_BODY_CLASS = 'jp-TerminalWidget-body';
 /**
  * Options for the terminal widget.
  */
-export 
+export
 interface ITerminalOptions {
   /**
    * The base websocket url.
@@ -94,7 +94,10 @@ class TerminalWidget extends Widget {
     TerminalWidget.nterms += 1;
     let url = baseUrl + 'terminals/websocket/' + TerminalWidget.nterms;
     this._ws = new WebSocket(url);
-    
+
+    // Set the default title.
+    this.title.text = 'Terminal ' + TerminalWidget.nterms;
+
     Terminal.brokenBold = true;
 
     this._term = new Terminal(getConfig(options));
@@ -236,7 +239,7 @@ class TerminalWidget extends Widget {
     // Set the fg and bg colors of the terminal and cursor.
     this._term.element.style.backgroundColor = this.background;
     this._term.element.style.color = this.color;
-    this._sheet.innerHTML = (".terminal-cursor {background:" + this.color + 
+    this._sheet.innerHTML = (".terminal-cursor {background:" + this.color +
                              ";color:" + this.background + ";}");
   }
 
