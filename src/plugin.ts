@@ -37,6 +37,7 @@ class TerminalHandler {
     let term = new TerminalWidget({ baseUrl: 'ws://localhost:8888',
                                   background: 'black',
                                   color: 'white'});
+    term.title.closable = true;
     this._shell.addToMainArea(term);
   }
 
