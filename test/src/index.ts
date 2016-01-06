@@ -13,7 +13,7 @@ describe('jupyter.terminal', () => {
   describe('TerminalWidget', () => {
 
     it('should always pass', () => {
-        let widget = new TerminalWidget();
+
     });
 
   });
