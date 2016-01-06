@@ -6,18 +6,12 @@
 'use strict';
 
 import {
-  getConfigOption
-} from 'jupyter-js-utils';
-
-import {
   TerminalWidget
 } from '../lib/index';
 
 
 function main(): void {
-  let baseUrl = getConfigOption('wsUrl');
-  let term = new TerminalWidget({ baseUrl: baseUrl,
-                                  background: 'black',
+  let term = new TerminalWidget({ background: 'black',
                                   color: 'white'});
 
   term.attach(document.body);

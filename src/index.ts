@@ -3,6 +3,10 @@
 'use strict';
 
 import {
+  getConfigOption
+} from 'jupyter-js-utils';
+
+import {
   Message
 } from 'phosphor-messaging';
 
@@ -90,7 +94,7 @@ class TerminalWidget extends Widget {
     super();
     options = options || {};
     this.addClass(TERMINAL_CLASS);
-    let baseUrl = handleBaseUrl(options.baseUrl);
+    let baseUrl = options.baseUrl || getConfigOption('wsUrl');
     TerminalWidget.nterms += 1;
     let url = baseUrl + 'terminals/websocket/' + TerminalWidget.nterms;
     this._ws = new WebSocket(url);
@@ -288,22 +292,4 @@ function getConfig(options: ITerminalOptions): ITerminalConfig {
     config.scrollback = options.scrollback;
   }
   return config;
-}
-
-
-/**
- * Handle logic for baseUrl.
- */
-function handleBaseUrl(baseUrl?: string): string {
-  if (baseUrl !== undefined) {
-    if (baseUrl[baseUrl.length - 1] !== '/') {
-      baseUrl += '/';
-    }
-    return baseUrl;
-  }
-  if (typeof location === undefined) {
-    return 'ws://localhost:8888/';
-  } else {
-    return 'ws' + location.origin.slice(4) + '/';
-  }
 }
