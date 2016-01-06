@@ -1,13 +1,11 @@
 {
   "name": "jupyter-js-terminal",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "description": "Terminal widget for Jupyter",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "dependencies": {
     "jupyter-js-utils": "^0.1.0",
-    "phosphide": "0.0.6",
-    "phosphor-di": "^0.9.0",
     "phosphor-messaging": "^1.0.6",
     "phosphor-widget": "^1.0.0-rc.0",
     "term.js": "0.0.7"
@@ -33,12 +31,10 @@
     "webpack": "^1.12.9"
   },
   "scripts": {
-    "clean": "rimraf docs && rimraf lib && rimraf test/build",
+    "clean": "rimraf docs && rimraf lib",
     "clean:example": "rimraf example/bundle.js",
     "build:example": "webpack --config example/webpack.conf.js",
-    "build:src": "tsc --project src && node scripts/copycss.js",
-    "build:test": "tsc --project test",
-    "build": "npm run build:src && npm run build:test",
+    "build": "tsc --project src && node scripts/copycss.js",
     "docs": "typedoc --options scripts/tdoptions.json",
     "postinstall": "npm dedupe",
     "prepublish": "npm run build",
