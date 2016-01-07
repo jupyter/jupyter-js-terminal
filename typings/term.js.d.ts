@@ -52,7 +52,7 @@ declare module 'term.js' {
 
     element: HTMLElement;
 
-    colors: number[];
+    colors: string[];
 
     rows: number;
 
@@ -63,6 +63,8 @@ declare module 'term.js' {
     popOnBell: boolean;
 
     scrollback: number;
+
+    on(event: string, callback: (arg: any) => void): void;
 
     open(el: HTMLElement): void;
 

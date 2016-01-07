@@ -16,11 +16,13 @@ function main(): void {
 
   term.attach(document.body);
 
-  window.onresize = () => term.update();
+  term.fit();
+  window.onresize = () => term.fit();
 
   setTimeout(() => {
       term.background = 'white';
       term.color = 'black';
+      term.fontSize = 20;
   }, 2000);
 }
 
