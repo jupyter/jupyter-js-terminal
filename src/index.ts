@@ -299,12 +299,6 @@ class TerminalWidget extends Widget {
     this._resizeTerminal();
   }
 
-  private _resizeTerminal() {
-    var rows = Math.max(2, Math.round(this._height / this._row_height) - 1);
-    var cols = Math.max(3, Math.round(this._width / this._col_width) - 1);
-    this._term.resize(cols, rows);
-  }
-
   /**
    * A message handler invoked on an `'update-request'` message.
    */
@@ -349,6 +343,15 @@ class TerminalWidget extends Widget {
     if (this._width !== -1) {
       this._resizeTerminal();
     }
+  }
+
+  /**
+   * Resize the terminal based on the computed geometry.
+   */
+  private _resizeTerminal() {
+    var rows = Math.max(2, Math.round(this._height / this._row_height) - 1);
+    var cols = Math.max(3, Math.round(this._width / this._col_width) - 1);
+    this._term.resize(cols, rows);
   }
 
   private _term: Terminal = null;
