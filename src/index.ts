@@ -114,6 +114,7 @@ class TerminalWidget extends Widget {
     this._term.open(this.node);
     this._term.element.classList.add(TERMINAL_BODY_CLASS)
 
+    this._dummyTerm = createDummyTerm();
     this.fontSize = options.fontSize || 11;
     if (options.background) this.background = options.background;
     if (options.color) this.color = options.color;
@@ -242,6 +243,7 @@ class TerminalWidget extends Widget {
     this._sheet = null;
     this._ws = null;
     this._term = null;
+    this._dummyTerm = null;
     super.dispose();
   }
 
@@ -319,26 +321,14 @@ class TerminalWidget extends Widget {
   }
 
   /**
-   * Use a dummy terminal to measure the row and column sizes.
+   * Use the dummy terminal to measure the row and column sizes.
    */
   private _snapTermSizing(): void {
-    var dummy_term = document.createElement('div');
-    dummy_term.style.visibility = 'hidden';
-    dummy_term.innerHTML = (
-      '01234567890123456789' +
-      '01234567890123456789' +
-      '01234567890123456789' +
-      '01234567890123456789'
-    );
-    dummy_term.style.position = 'absolute';
-    dummy_term.style.height = 'auto';
-    dummy_term.style.width = 'auto';
-    (dummy_term.style as any)['white-space'] = 'nowrap';
-
-    this._term.element.appendChild(dummy_term);
-    this._row_height = dummy_term.offsetHeight;
-    this._col_width = dummy_term.offsetWidth / 80;
-    this._term.element.removeChild(dummy_term);
+    let node = this._dummyTerm;
+    this._term.element.appendChild(node);
+    this._row_height = node.offsetHeight;
+    this._col_width = node.offsetWidth / 80;
+    this._term.element.removeChild(node);
     this._dirty = false;
     if (this._width !== -1) {
       this._resizeTerminal();
@@ -359,6 +349,7 @@ class TerminalWidget extends Widget {
   private _row_height = -1;
   private _col_width = -1;
   private _sheet: HTMLElement = null;
+  private _dummyTerm: HTMLElement = null;
   private _fontSize = -1;
   private _dirty = false;
   private _width = -1;
@@ -384,4 +375,24 @@ function getConfig(options: ITerminalOptions): ITerminalConfig {
     config.scrollback = options.scrollback;
   }
   return config;
+}
+
+
+/**
+ * Create a dummy terminal element used to measure text size.
+ */
+function createDummyTerm(): HTMLElement {
+  let node = document.createElement('div');
+  node.innerHTML = (
+    '01234567890123456789' +
+    '01234567890123456789' +
+    '01234567890123456789' +
+    '01234567890123456789'
+  );
+  node.style.visibility = 'hidden';
+  node.style.position = 'absolute';
+  node.style.height = 'auto';
+  node.style.width = 'auto';
+  (node.style as any)['white-space'] = 'nowrap';
+  return node;
 }
