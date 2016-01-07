@@ -22,7 +22,7 @@ function main(): void {
   setTimeout(() => {
       term.background = 'white';
       term.color = 'black';
-      term.fontSize = 20;
+      term.fontSize = 13;
   }, 2000);
 }
 
