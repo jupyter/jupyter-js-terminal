@@ -7,7 +7,7 @@ import {
 } from 'jupyter-js-utils';
 
 import {
-  Message
+  Message, sendMessage
 } from 'phosphor-messaging';
 
 import {
@@ -41,6 +41,11 @@ interface ITerminalOptions {
    * The base websocket url.
    */
   baseUrl?: string;
+
+  /**
+   * The font size of the terminal in pixels.
+   */
+  fontSize?: number;
 
   /**
    * The background color of the terminal.
@@ -95,6 +100,7 @@ class TerminalWidget extends Widget {
     options = options || {};
     this.addClass(TERMINAL_CLASS);
     let baseUrl = options.baseUrl || getConfigOption('wsUrl');
+
     TerminalWidget.nterms += 1;
     let url = baseUrl + 'terminals/websocket/' + TerminalWidget.nterms;
     this._ws = new WebSocket(url);
@@ -108,6 +114,8 @@ class TerminalWidget extends Widget {
     this._term.open(this.node);
     this._term.element.classList.add(TERMINAL_BODY_CLASS)
 
+    this._dummyTerm = createDummyTerm();
+    this.fontSize = options.fontSize || 11;
     if (options.background) this.background = options.background;
     if (options.color) this.color = options.color;
 
@@ -136,14 +144,34 @@ class TerminalWidget extends Widget {
   }
 
   /**
-   * Get the background color of the widget.
+   * Get the font size of the terminal in pixels.
+   */
+  get fontSize(): number {
+    return this._fontSize;
+  }
+
+  /**
+   * Set the font size of the terminal in pixels.
+   */
+  set fontSize(size: number) {
+    this._fontSize = size;
+    this._term.element.style.fontSize = `${size}px`;
+    if (!this.isAttached || !this.isVisible) {
+      this._dirty = true;
+      return;
+    }
+    this._snapTermSizing();
+  }
+
+  /**
+   * Get the background color of the terminal.
    */
   get background(): string {
     return this._term.colors[256];
   }
 
   /**
-   * Set the background color of the widget.
+   * Set the background color of the terminal.
    */
   set background(value: string) {
     this._term.colors[256] = value;
@@ -151,7 +179,7 @@ class TerminalWidget extends Widget {
   }
 
   /**
-   * Get the text color of the widget.
+   * Get the text color of the terminal.
    */
   get color(): string {
     return this._term.colors[257];
@@ -215,25 +243,62 @@ class TerminalWidget extends Widget {
     this._sheet = null;
     this._ws = null;
     this._term = null;
+    this._dummyTerm = null;
     super.dispose();
   }
 
   /**
-   * Set up the initial size of the terminal when attached.
+   * Process a message sent to the widget.
+   *
+   * @param msg - The message sent to the widget.
+   *
+   * #### Notes
+   * Subclasses may reimplement this method as needed.
+   */
+  processMessage(msg: Message): void {
+    super.processMessage(msg);
+    switch (msg.type) {
+      case 'fit-request':
+        this.onFitRequest(msg);
+        break;
+    }
+  }
+
+  /**
+   * Set the size of the terminal when attached if dirty.
    */
   protected onAfterAttach(msg: Message): void {
-    this._snapTermSizing();
+    if (this._dirty) {
+      this._snapTermSizing();
+    }
+  }
+
+  /**
+   * Set the size of the terminal when shown if dirty.
+   */
+  protected onAfterShow(msg: Message): void {
+    if (this._dirty) {
+      this._snapTermSizing();
+    }
   }
 
   /**
    * On resize, use the computed row and column sizes to resize the terminal.
    */
   protected onResize(msg: ResizeMessage): void {
-    if (!this._row_height) this._row_height = 1;
-    if (!this._col_width) this._col_width = 1;
-    var rows = Math.max(2, Math.round(msg.height / this._row_height) - 1);
-    var cols = Math.max(3, Math.round(msg.width / this._col_width) - 1);
-    this._term.resize(cols, rows);
+    if (!this.isAttached) {
+      return;
+    }
+    let width = msg.width;
+    let height = msg.height;
+    if (width < 0 || height < 0) {
+      let rect = this.node.getBoundingClientRect();
+      if (width < 0) width = rect.width;
+      if (height < 0) height = rect.height;
+    }
+    this._width = width;
+    this._height = height;
+    this._resizeTerminal();
   }
 
   /**
@@ -248,29 +313,47 @@ class TerminalWidget extends Widget {
   }
 
   /**
-   * Use a dummy terminal to measure the row and column sizes.
+   * A message handler invoked on an `'fit-request'` message.
    */
-  private _snapTermSizing(): void {
-    var dummy_term = document.createElement('div');
-    dummy_term.style.visibility = 'hidden';
-    dummy_term.innerHTML = (
-      '01234567890123456789' +
-      '01234567890123456789' +
-      '01234567890123456789' +
-      '01234567890123456789'
-    );
-
-    this._term.element.appendChild(dummy_term);
-    this._row_height = dummy_term.offsetHeight;
-    this._col_width = dummy_term.offsetWidth / 80;
-    this._term.element.removeChild(dummy_term);
+  protected onFitRequest(msg: Message): void {
+    let resize = ResizeMessage.UnknownSize;
+    sendMessage(this, resize);
   }
 
-  private _term: any;
-  private _ws: WebSocket;
-  private _row_height: number;
-  private _col_width: number;
+  /**
+   * Use the dummy terminal to measure the row and column sizes.
+   */
+  private _snapTermSizing(): void {
+    let node = this._dummyTerm;
+    this._term.element.appendChild(node);
+    this._row_height = node.offsetHeight;
+    this._col_width = node.offsetWidth / 80;
+    this._term.element.removeChild(node);
+    this._dirty = false;
+    if (this._width !== -1) {
+      this._resizeTerminal();
+    }
+  }
+
+  /**
+   * Resize the terminal based on the computed geometry.
+   */
+  private _resizeTerminal() {
+    var rows = Math.max(2, Math.round(this._height / this._row_height) - 1);
+    var cols = Math.max(3, Math.round(this._width / this._col_width) - 1);
+    this._term.resize(cols, rows);
+  }
+
+  private _term: Terminal = null;
+  private _ws: WebSocket = null;
+  private _row_height = -1;
+  private _col_width = -1;
   private _sheet: HTMLElement = null;
+  private _dummyTerm: HTMLElement = null;
+  private _fontSize = -1;
+  private _dirty = false;
+  private _width = -1;
+  private _height = -1;
 }
 
 
@@ -292,4 +375,24 @@ function getConfig(options: ITerminalOptions): ITerminalConfig {
     config.scrollback = options.scrollback;
   }
   return config;
+}
+
+
+/**
+ * Create a dummy terminal element used to measure text size.
+ */
+function createDummyTerm(): HTMLElement {
+  let node = document.createElement('div');
+  node.innerHTML = (
+    '01234567890123456789' +
+    '01234567890123456789' +
+    '01234567890123456789' +
+    '01234567890123456789'
+  );
+  node.style.visibility = 'hidden';
+  node.style.position = 'absolute';
+  node.style.height = 'auto';
+  node.style.width = 'auto';
+  (node.style as any)['white-space'] = 'nowrap';
+  return node;
 }
