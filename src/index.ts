@@ -157,10 +157,6 @@ class TerminalWidget extends Widget {
   set fontSize(size: number) {
     this._fontSize = size;
     this._term.element.style.fontSize = `${size}px`;
-    if (!this.isAttached || !this.isVisible) {
-      this._dirty = true;
-      return;
-    }
     this._snapTermSizing();
   }
 
@@ -287,7 +283,7 @@ class TerminalWidget extends Widget {
    * On resize, use the computed row and column sizes to resize the terminal.
    */
   protected onResize(msg: ResizeMessage): void {
-    if (!this.isAttached) {
+    if (!this.isAttached || !this.isVisible) {
       return;
     }
     let width = msg.width;
@@ -325,10 +321,11 @@ class TerminalWidget extends Widget {
    * Use the dummy terminal to measure the row and column sizes.
    */
   private _snapTermSizing(): void {
-    let node = this._dummyTerm;
-    if (this._term.element.offsetHeight === 0) {
+    if (!this.isAttached || !this.isVisible) {
+      this._dirty = true;
       return;
     }
+    let node = this._dummyTerm;
     this._term.element.appendChild(node);
     this._row_height = node.offsetHeight;
     this._col_width = node.offsetWidth / 80;
