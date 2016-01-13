@@ -6,24 +6,28 @@
 'use strict';
 
 import {
+  DockPanel
+} from 'phosphor-dockpanel';
+
+import {
   TerminalWidget
 } from '../../lib/index';
 
 
 function main(): void {
-  let term = new TerminalWidget({ background: 'black',
+  let term1 = new TerminalWidget({ background: 'black',
                                   color: 'white'});
+  let term2 = new TerminalWidget({ background: 'white',
+                                  color: 'black'});
 
-  term.attach(document.body);
+  let dock = new DockPanel();
+  dock.insertTabBefore(term1);
+  dock.insertTabBefore(term2);
 
-  term.fit();
-  window.onresize = () => term.fit();
+  dock.attach(document.body);
+  dock.id = 'main';
 
-  setTimeout(() => {
-      term.background = 'white';
-      term.color = 'black';
-      term.fontSize = 13;
-  }, 2000);
+  window.onresize = () => dock.fit();
 }
 
 

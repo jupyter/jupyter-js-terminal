@@ -104,6 +104,7 @@ class TerminalWidget extends Widget {
     TerminalWidget.nterms += 1;
     let url = baseUrl + 'terminals/websocket/' + TerminalWidget.nterms;
     this._ws = new WebSocket(url);
+    this.id = `jp-TerminalWidget-${TerminalWidget.nterms}`;
 
     // Set the default title.
     this.title.text = 'Terminal ' + TerminalWidget.nterms;
@@ -116,8 +117,8 @@ class TerminalWidget extends Widget {
 
     this._dummyTerm = createDummyTerm();
     this.fontSize = options.fontSize || 11;
-    if (options.background) this.background = options.background;
-    if (options.color) this.color = options.color;
+    this.background = options.background || 'white';
+    this.color = options.color || 'black';
 
     this._term.on('data', (data: string) => {
       this._ws.send(JSON.stringify(['stdin', data]));
@@ -167,14 +168,14 @@ class TerminalWidget extends Widget {
    * Get the background color of the terminal.
    */
   get background(): string {
-    return this._term.colors[256];
+    return this._background
   }
 
   /**
    * Set the background color of the terminal.
    */
   set background(value: string) {
-    this._term.colors[256] = value;
+    this._background = value;
     this.update();
   }
 
@@ -182,14 +183,14 @@ class TerminalWidget extends Widget {
    * Get the text color of the terminal.
    */
   get color(): string {
-    return this._term.colors[257];
+    return this._color;
   }
 
   /**
    * Set the text color of the terminal.
    */
   set color(value: string) {
-    this._term.colors[257] = value;
+    this._color = value;
     this.update();
   }
 
@@ -325,6 +326,9 @@ class TerminalWidget extends Widget {
    */
   private _snapTermSizing(): void {
     let node = this._dummyTerm;
+    if (this._term.element.offsetHeight === 0) {
+      return;
+    }
     this._term.element.appendChild(node);
     this._row_height = node.offsetHeight;
     this._col_width = node.offsetWidth / 80;
@@ -354,6 +358,8 @@ class TerminalWidget extends Widget {
   private _dirty = false;
   private _width = -1;
   private _height = -1;
+  private _background = ''
+  private _color = '';
 }
 
 
