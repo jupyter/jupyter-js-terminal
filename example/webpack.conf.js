@@ -12,5 +12,10 @@ module.exports = {
     loaders: [
       { test: /\.css$/, loader: 'style-loader!css-loader' },
     ]
+  },
+  resolve: {
+    alias: {
+      'requirejs': 'requirejs/require'
+    }
   }
 }
