@@ -1,11 +1,11 @@
 {
   "name": "jupyter-js-terminal",
-  "version": "0.1.12",
+  "version": "0.1.15",
   "description": "Terminal widget for Jupyter",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "dependencies": {
-    "jupyter-js-utils": "^0.2.17",
+    "jupyter-js-utils": "^0.3",
     "phosphor-messaging": "^1.0.6",
     "phosphor-widget": "^1.0.0-rc.0",
     "term.js": "0.0.7"
