@@ -1,6 +1,6 @@
 {
   "name": "jupyter-js-terminal",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "Terminal widget for Jupyter",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
