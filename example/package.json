@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "name": "jupyter-js-terminal-example",
+  "dependencies": {
+    "phosphor-dockpanel": "^0.9.6",
+    "jupyter-js-terminal": "file:.."
+  },
+  "scripts": {
+    "postinstall": "npm dedupe"
+  }
+}
