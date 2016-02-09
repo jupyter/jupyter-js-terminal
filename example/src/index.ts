@@ -6,12 +6,12 @@
 'use strict';
 
 import {
-  DockPanel
-} from 'phosphor-dockpanel';
+  TerminalWidget
+} from 'jupyter-js-terminal';
 
 import {
-  TerminalWidget
-} from '../../lib/index';
+  DockPanel
+} from 'phosphor-dockpanel';
 
 
 function main(): void {
