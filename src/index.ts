@@ -3,7 +3,7 @@
 'use strict';
 
 import {
-  getConfigOption
+  getWsUrl
 } from 'jupyter-js-utils';
 
 import {
@@ -99,7 +99,7 @@ class TerminalWidget extends Widget {
     super();
     options = options || {};
     this.addClass(TERMINAL_CLASS);
-    let baseUrl = options.baseUrl || getConfigOption('wsUrl');
+    let baseUrl = options.baseUrl || getWsUrl();
 
     TerminalWidget.nterms += 1;
     let url = baseUrl + 'terminals/websocket/' + TerminalWidget.nterms;
