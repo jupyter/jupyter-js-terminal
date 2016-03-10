@@ -1,5 +1,5 @@
-Jupyter JS Terminal
-===================
+DEPRECATED - Jupyter JS Terminal
+================================
 
 Terminal client for Jupyter.
 
